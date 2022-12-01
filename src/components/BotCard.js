@@ -9,13 +9,25 @@ const botTypeClasses = {
   Captain: "icon star",
 };
 
-function BotCard({ bot }) {
+function BotCard({ bot, setArmy }) {
+
+  const handleClick = async (bot) => {
+    const deleteRequest = async () => {
+      let req = await fetch(`http://localhost:8002/bots/${bot.id}`, {method: 'DELETE'})
+      if(req.ok) console.log("Bot was deleted")
+      else console.log("Bot was probably already deleted from the server and only exists in the DOM and i didnt want to remove it from the collection too cause thats not what the deliverables said. Idk, theres a weird thing cause the red X exists in both army and collection. Hopefully this is the right solution.. Hi Michael!")
+      
+      setArmy((prevState) => { return [...prevState.filter((x) => { return x.id !== bot.id })] })
+    }
+
+    deleteRequest()
+  }
+
   return (
     <div className="ui column">
       <div
         className="ui card"
         key={bot.id}
-        onClick={() => console.log("add code to connect event listener")}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />
@@ -47,9 +59,7 @@ function BotCard({ bot }) {
             <div className="ui center aligned segment basic">
               <button
                 className="ui mini red button"
-                onClick={() =>
-                  console.log("add code to connect event listener")
-                }
+                onClick={() =>{handleClick(bot)}}
               >
                 x
               </button>
